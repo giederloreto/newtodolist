@@ -11,9 +11,17 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'A new todo list',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.purple,
+        brightness: Brightness.light,
+        /* light theme settings */
       ),
-      home: HomeScreen(),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        /* dark theme settings */
+      ),
+      themeMode: ThemeMode.system,
+      //get system theme
+      home: const HomeScreen(),
     );
   }
 }
