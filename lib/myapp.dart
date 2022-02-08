@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       ),
       themeMode: ThemeMode.system,
       //get system theme
-      home: const HomeScreen(),
+      home: HomeScreen(),
     );
   }
 }
