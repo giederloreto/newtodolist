@@ -9,6 +9,9 @@ class HomeScreen extends StatefulWidget {
     items.add(
       Item(title: "Farinha Lactea Nestle", done: true),
     );
+    items.add(
+      Item(title: "Leite", done: false),
+    );
   }
 
   @override
@@ -20,19 +23,42 @@ class _HomeScreenState extends State<HomeScreen> {
     "Adicionar Tarefa",
     style: TextStyle(color: Colors.white),
   );
+  TextEditingController controllerTextFormFieldAddTask =
+      TextEditingController();
+
+  void addTaskOnList() {
+    if (controllerTextFormFieldAddTask != null) {
+      setState(() {
+        widget.items.add(
+          Item(title: controllerTextFormFieldAddTask.text, done: false),
+        );
+      });
+    }
+    controllerTextFormFieldAddTask.clear();
+  }
+
+  void removeTask(int index) {
+    setState(() {
+      widget.items.removeAt(index);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: TextFormField(
+          controller: controllerTextFormFieldAddTask,
           decoration: InputDecoration(
             label: addTaskHint,
           ),
+          style: TextStyle(color: Colors.white),
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              addTaskOnList();
+            },
             icon: const Icon(
               Icons.add,
             ),
@@ -42,10 +68,20 @@ class _HomeScreenState extends State<HomeScreen> {
       body: ListView.builder(
           itemCount: widget.items.length,
           itemBuilder: (context, index) {
-            return CheckboxListTile(
-              title: Text(widget.items[index].title),
-              value: widget.items[index].done,
-              onChanged: (value) {},
+            return Dismissible(
+              key: Key(widget.items[index].title),
+              onDismissed: (direction) {
+                removeTask(index);
+              },
+              child: CheckboxListTile(
+                title: Text(widget.items[index].title),
+                value: widget.items[index].done,
+                onChanged: (value) {
+                  setState(() {
+                    widget.items[index].done = value!;
+                  });
+                },
+              ),
             );
           }),
     );
