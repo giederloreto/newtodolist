@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:newtodolist/models/item_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   List<Item> items = [];
@@ -41,6 +44,11 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       widget.items.removeAt(index);
     });
+  }
+
+  saveTask() async {
+    var prefs = await SharedPreferences.getInstance();
+    prefs.setString('data', jsonEncode(widget.items));
   }
 
   @override
