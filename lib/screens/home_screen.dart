@@ -9,12 +9,6 @@ class HomeScreen extends StatefulWidget {
 
   HomeScreen() {
     items = [];
-    items.add(
-      Item(title: "Farinha Lactea Nestle", done: true),
-    );
-    items.add(
-      Item(title: "Leite", done: false),
-    );
   }
 
   @override
@@ -48,7 +42,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
   saveTask() async {
     var prefs = await SharedPreferences.getInstance();
-    prefs.setString('data', jsonEncode(widget.items));
+    await prefs.setString('data', jsonEncode(widget.items));
+  }
+
+  Future LoadTask() async {
+    var prefs = await SharedPreferences.getInstance();
+    var data = prefs.getString('data');
+
+    if (data != null) {
+      Iterable decoded = jsonDecode(data);
+      List<Item> result = decoded.map((e) => Item.fromJson(e)).toList();
+      setState(() {
+        widget.items = result;
+      });
+    }
+  }
+
+  _HomeScreenState() {
+    LoadTask();
   }
 
   @override
@@ -66,6 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             onPressed: () {
               addTaskOnList();
+              saveTask();
             },
             icon: const Icon(
               Icons.add,
@@ -80,6 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
               key: Key(widget.items[index].title),
               onDismissed: (direction) {
                 removeTask(index);
+                saveTask();
               },
               child: CheckboxListTile(
                 title: Text(widget.items[index].title),
